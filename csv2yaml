@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use utf8;
+use strict;
+use warnings;
+
+use YAML qw/Dump/;
+use Text::CSV;
+
+my $csv = Text::CSV->new ( { binary => 1 } );
+my @name;
+my @data;
+while ( my $line = <STDIN> ) {
+    $csv->parse( $line );
+    if ( @name ) {
+        my @columns = $csv->fields();
+        my $hash;
+        for my $i ( keys @name ){
+            $hash->{ $name[$i] } = $columns[$i] if $name[$i];
+        }
+        push @data, $hash;
+    }
+    else {
+         @name = $csv->fields();
+    }
+}
+
+print Dump \@data;
+
