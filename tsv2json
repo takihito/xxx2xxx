@@ -3,7 +3,14 @@
 use utf8;
 use strict;
 use warnings;
+
 use JSON;
+use JSON::Types;
+use Getopt::Long;
+
+my $int = [];
+GetOptions ("int=s@" => \$int);
+@$int = split(/,/,join(',',@$int));
 
 my @name;
 my @data;
@@ -13,7 +20,14 @@ while ( my $line = <STDIN> ) {
     if ( @name ) {
         my $hash;
         for my $i ( keys @name ){
-            $hash->{ $name[$i] } = $columns[$i] if $name[$i];
+            if ( $name[$i] ) {
+                if ( grep { /^$name[$i]$/ } @$int ) {
+                    $hash->{ $name[$i] } = number $columns[$i];
+                }
+                else {
+                    $hash->{ $name[$i] } = $columns[$i];
+                }
+            }
         }
         push @data, $hash;
     }

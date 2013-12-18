@@ -21,3 +21,14 @@ Personal tools
 * tsv2perl
  - a command-line tool to convert TSV to Perl data object.
 
+* json2yaml
+ - a command-line tool to convert JSON to YAML.
+
+* lstv2json
+ - a command-line tool to convert LTSV to JSON.
+
+* lstv2perl
+ - a command-line tool to convert LTSV to Perl data object.
+
+
+

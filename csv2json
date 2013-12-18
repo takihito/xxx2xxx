@@ -5,19 +5,34 @@ use utf8;
 use strict;
 use warnings;
 
-use Text::CSV;
 use JSON;
+use JSON::Types;
+use Getopt::Long;
+use Text::CSV;
+
+my $int = [];
+GetOptions ("int=s@" => \$int);
+@$int = split(/,/,join(',',@$int));
 
 my $csv = Text::CSV->new ( { binary => 1 } );
 my @name;
 my @data;
 while ( my $line = <STDIN> ) {
+    chomp($line);
+    next unless $line;
     $csv->parse( $line );
     if ( @name ) {
         my @columns = $csv->fields();
         my $hash;
         for my $i ( keys @name ){
-            $hash->{ $name[$i] } = $columns[$i] if $name[$i];
+            if ( $name[$i] ) {
+                if ( grep { /^$name[$i]$/ } @$int ) {
+                    $hash->{ $name[$i] } = number $columns[$i];
+                }
+                else {
+                    $hash->{ $name[$i] } = $columns[$i];
+                }
+            }
         }
         push @data, $hash;
     }
@@ -27,6 +42,5 @@ while ( my $line = <STDIN> ) {
 }
 
 my $json_text = encode_json \@data;;
-
 print $json_text;
 

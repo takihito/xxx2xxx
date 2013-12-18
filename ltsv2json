@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+use utf8;
+use strict;
+use warnings;
+use JSON;
+use JSON::Types;
+use Text::LTSV;
+use Getopt::Long;
+
+my $int = [];
+GetOptions ("int=s@" => \$int);
+@$int = split(/,/,join(',',@$int));
+
+my $p = Text::LTSV->new;
+my @data;
+my @name;
+while ( my $line = <STDIN> ) {
+    chomp($line);
+#    push @data, $p->parse_line($line);
+    my $hash = $p->parse_line($line);
+warn "%$hash";
+    for my $key ( keys %$hash ) {
+        if ( $hash->{$key} ) {
+            if ( grep { /^$key$/ } @$int ) {
+                $hash->{$key} = number $hash->{$key};
+            }
+        }
+    }
+    push @data, $hash;
+}
+my $json_text = encode_json \@data;;
+
+print "$json_text";
