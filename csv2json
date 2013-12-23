@@ -10,9 +10,9 @@ use JSON::Types;
 use Getopt::Long;
 use Text::CSV;
 
-my $int = [];
-GetOptions ("int=s@" => \$int);
-@$int = split(/,/,join(',',@$int));
+my $num = [];
+GetOptions ("num=s@" => \$num);
+@$num = split(/,/,join(',',@$num));
 
 my $csv = Text::CSV->new ( { binary => 1 } );
 my @name;
@@ -26,7 +26,7 @@ while ( my $line = <STDIN> ) {
         my $hash;
         for my $i ( keys @name ){
             if ( $name[$i] ) {
-                if ( grep { /^$name[$i]$/ } @$int ) {
+                if ( grep { /^$name[$i]$/ } @$num ) {
                     $hash->{ $name[$i] } = number $columns[$i];
                 }
                 else {
