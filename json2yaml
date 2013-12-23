@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use utf8;
+use strict;
+use warnings;
+use YAML qw/Dump/;
+use JSON;
+
+my $stdin;
+while ( my $line = <STDIN> ) {
+    chomp($line);
+    $stdin .= $line if $line;
+}
+
+my $data = decode_json $stdin;
+
+print Dump $data;
+

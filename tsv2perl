@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+
+use utf8;
+use strict;
+use warnings;
+use Data::Dumper;
+
+local $Data::Dumper::Indent = 1;
+local $Data::Dumper::Terse  = 1;
+
+my @name;
+my @data;
+while ( my $line = <STDIN> ) {
+    chomp($line);
+    my @columns = split("\t", $line);
+    if ( @name ) {
+        my $hash;
+        for my $i ( keys @name ){
+            $hash->{ $name[$i] } = $columns[$i] if $name[$i];
+        }
+        push @data, $hash;
+    }
+    else {
+         @name = @columns;
+    }
+}
+
+print Dumper(\@data);
